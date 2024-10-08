@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disability Care Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .info-section {
+            flex: 1 1 45%;
+            margin: 10px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .info-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        @media (max-width: 600px) {
+            .info-section {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cards-container" id="cards-container"></div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div class="info-container">
+                <div class="info-section">
+                    <h3>Exercise Routine:</h3>
+                    <div id="exercise-list"></div>
+                </div>
+                <div class="info-section">
+                    <h3>Diet Plan:</h3>
+                    <div id="diet-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const disabilities = [
+            {
+                name: "Vision Impairment",
+                diet: [
+                    { item: "Leafy greens (spinach, kale)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Omega-3s (salmon, walnuts)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Citrus fruits (oranges)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Carrots (beta carotene)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" }
+                ],
+                exercise: [
+                    { item: "Eye Focus Shifting: 5 times (3x/day)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Palming: 1 minute (3x/day)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Eye Circles: 10 each direction (2x/day)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Distance Staring: 2 minutes (2x/day)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" }
+                ]
+            },
+            {
+                name: "Deaf or Hard of Hearing",
+                diet: [
+                    { item: "Magnesium-rich foods (spinach, almonds)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Omega-3s (sardines)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Folate (asparagus)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Vitamin D (mushrooms)", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" }
+                ],
+                exercise: [
+                    { item: "Speech-Language: 30 minutes daily", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Balance Training: 10 minutes daily", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Auditory Training: 15 minutes daily", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" },
+                    { item: "Social Interaction: 20 minutes daily", image: "https://imagedelivery.net/5ejkUOtsMH5sf63fw6q33Q/c1a3e2c1-0d2e-4f4a-9f3b-c5c7c2c5e600/public" }
+                ]
+            },
+            // Add more disabilities here with their respective diet and exercise information
+        ];
+
+        const cardsContainer = document.getElementById('cards-container');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const dietList = document.getElementById('diet-list');
+        const exerciseList = document.getElementById('exercise-list');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        disabilities.forEach((disability, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.backgroundColor = `hsl(${index * 30}, 70%, 80%)`;
+            card.innerHTML = `<h2>${disability.name}</h2>`;
+            card.addEventListener('click', () => showModal(disability));
+            cardsContainer.appendChild(card);
+        });
+
+        function showModal(disability) {
+            modalTitle.textContent = disability.name;
+            dietList.innerHTML = disability.diet.map(item => `
+                <div class="info-item">
+                    <img src="${item.image}" alt="${item.item}">
+                    <span>${item.item}</span>
+                </div>
+            `).join('');
+            exerciseList.innerHTML = disability.exercise.map(item => `
+                <div class="info-item">
+                    <img src="${item.image}" alt="${item.item}">
+                    <span>${item.item}</span>
+                </div>
+            `).join('');
+            modal.style.display = 'block';
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

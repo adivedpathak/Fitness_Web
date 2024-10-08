@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusive Fitness - Contact</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html" accesskey="h">Home</a></li>
+                <li><a href="about.html" accesskey="a">About</a></li>
+                <li><a href="services.html" accesskey="s">Services</a></li>
+                <li><a href="contact.html" accesskey="c">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="contact" class="screen">
+            <h1>Contact Us</h1>
+            <div class="content-box">
+                <form id="contact-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <h2>Get in Touch</h2>
+                    <p>Phone: (123) 456-7890</p>
+                    <p>Email: info@inclusivefitness.com</p>
+                    <p>Address: 123 Fitness Street, Healthyville, FT 12345</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Inclusive Fitness. All rights reserved.</p>
+    </footer>
+
+    <button id="speech-toggle" class="btn speech-toggle">Disable Speech</button>
+
+    <script src="script.js"></script>
+</body>
+</html>

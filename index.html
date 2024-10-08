@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusive Fitness - Home</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+       
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+
+}
+
+.disability-card {
+    background: linear-gradient(135deg, #6dd5ed, #2193b0); 
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); 
+    padding: 30px;
+    text-align: center;
+    flex: 1 1 calc(25% - 40px);
+    min-width: 250px;
+    max-width: 300px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.4s ease, background-color 0.4s ease;
+      position: relative;
+    overflow: hidden;
+}
+
+.disability-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-25deg);
+    transition: left 0.4s ease;
+}
+
+.disability-card:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #2193b0, #6dd5ed);
+}
+
+.disability-card:hover::before {
+    left: 100%; 
+}
+
+.disability-card h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.disability-card p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.disability-card .icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.disability-card:hover .icon {
+    transform: rotate(360deg);
+}
+
+
+@media (max-width: 1200px) {
+    .disability-card {
+        flex: 1 1 calc(33.33% - 40px);
+    }
+}
+
+@media (max-width: 768px) {
+    .disability-card {
+        flex: 1 1 calc(50% - 40px); 
+    }
+}
+
+@media (max-width: 480px) {
+    .disability-card {
+        flex: 1 1 100%; 
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Dark background with transparency */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease; /* Modal animation */
+    position: relative;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    color: black;
+    cursor: pointer;
+}
+
+/* Modal animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header >
+        <nav >
+            <ul>
+                <li><a href="index.html" accesskey="h">Home</a></li>
+                <li><a href="about.html" accesskey="a">About</a></li>
+                <li><a href="services.html" accesskey="s">Services</a></li>
+                <li><a href="contact.html" accesskey="c">Contact</a></li>
+       
+            
+     
+        <div class="font-size-controls">
+            <button id="increaseBtn">A+</button>
+            <button id="decreaseBtn">A-</button>
+        </div>
+            </ul>
+    </nav>
+    </header>
+
+    <main>
+        <div id="home" class="screen">
+            <h1>Welcome to Inclusive Fitness</h1>
+            <p>Your journey to better health starts here</p>
+            <button id="start-btn" class="btn">Start Your Journey</button>
+        </div>
+
+        <div id="user-type-screen" class="screen hidden">
+            <h2>Select User Type</h2>
+            <div class="split-screen">
+                <div class="left-side" tabindex="0" role="button" aria-label="Select Normal Person">
+                    <h3>Normal Person</h3>
+                </div>
+                <div class="right-side" tabindex="0" role="button" aria-label="Select Disabled Person">
+                    <h3>Disabled Person</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="normal-user-form" class="screen hidden full-screen">
+            <h2>Tell Us About Yourself</h2>
+            <form id="normal-form">
+                <label for="gender">Gender:</label>
+                <select id="gender" required>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label for="age">Age:</label>
+                <input type="number" id="age" required min="1" max="120">
+
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" required min="50" max="300">
+
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" required min="20" max="500">
+
+                <button type="submit" class="btn">Calculate BMI</button>
+            </form>
+        </div>
+
+        <div id="bmi-result" class="screen hidden full-screen">
+            <h2>Your BMI Result</h2>
+            <p id="bmi-value"></p>
+            <p id="bmi-category"></p>
+            <button id="btn-exercises" class="btn">View Recommendations</button>
+        </div>
+
+        <div id="disabled-user-form" class="screen hidden full-screen">
+            <h2>Tell Us About Your Disability</h2>
+            <div class="container">
+                <div id="card-container" class="card-container"></div>
+            </div>
+        
+            <div id="modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="modal-title"></h2>
+                    <div id="modal-body"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="recommendations" class="screen hidden full-screen">
+            <h2>Your Personalized Plan</h2>
+            <div class="recommendations-content">
+                <div class="exercise-section">
+                    <h3>Exercise Recommendations</h3>
+                    <div id="exercise-list" class="exercise-grid"></div>
+                </div>
+                <div class="diet-section">
+                    <h3>Daily Diet Plan</h3>
+                    <button id="toggle-diet" class="btn toggle-button">Show Diet Plan</button>
+                    <ul id="diet-plan" class="hidden"></ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Inclusive Fitness. All rights reserved.</p>
+    </footer>
+
+    <div id="accessibility-info" class="hidden">
+        <p>Press 'Tab' to navigate, 'Enter' to select, and 'Esc' to close dialogs.</p>
+        <p>Keyboard shortcuts: Alt + H (Home), Alt + A (About), Alt + S (Services), Alt + C (Contact)</p>
+    </div>
+
+    <button id="speech-toggle" class="btn speech-toggle">Disable Speech</button>
+
+    <script src="script.js">
+
+document.addEventListener("DOMContentLoaded", function () {
+   
+    const disabledPersonBtn = document.querySelector('.right-side');
+    const disabledUserForm = document.getElementById('disabled-user-form');
+    const disabilityCardContainer = document.getElementById('card-container');
+    const modal = document.getElementById('disability-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeModal = document.querySelector('.close');
+
+    // Function to render disability cards
+    function renderDisabilityCards() {
+        disabilities.forEach(disability => {
+            const card = document.createElement('div');
+            card.className = 'disability-card';
+            card.setAttribute('tabindex', 0); // Accessibility
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `View details for ${disability.name}`);
+            card.innerHTML = `<h3>${disability.name}</h3>`;
+            card.addEventListener('click', () => openModal(disability));
+            disabilityCardContainer.appendChild(card);
+        });
+    }
+
+    // Function to open modal with disability details
+    function openModal(disability) {
+        modalTitle.textContent = disability.name;
+        modalBody.innerHTML = `
+            <h3>Diet Plan:</h3>
+            <p>${disability.dietPlan}</p>
+            <h3>Exercise Recommendations:</h3>
+            <p>${disability.exercise}</p>
+        `;
+        modal.classList.remove('hidden');
+    }
+
+    // Close modal functionality
+    closeModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Show disabled user form when clicking on Disabled Person
+    disabledPersonBtn.addEventListener('click', () => {
+        disabledUserForm.classList.remove('hidden');
+        renderDisabilityCards(); // Render cards dynamically when the form is shown
+    });
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+});
+
+
+    </script>
+</body>
+</html>
